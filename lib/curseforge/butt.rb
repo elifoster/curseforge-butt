@@ -1,7 +1,7 @@
 require_relative 'versions'
 require_relative 'upload'
 require 'httpclient'
-require 'json'
+require 'oj'
 
 module CurseForge
   class Butt
@@ -14,12 +14,7 @@ module CurseForge
     # @param api_key [String] The user's API key which will be used to access
     #   everything.
     def initialize(projectid, game, api_key)
-      @projectid =
-        if projectid.is_a?(Fixnum)
-          projectid.to_s
-        else
-          projectid
-        end
+      @projectid = projectid.is_a?(Fixnum) ? projectid.to_s : projectid
       @game = game
       @api_key = api_key
 
@@ -39,7 +34,7 @@ module CurseForge
 
       response = @client.get(uri, header)
       if autoparse
-        return JSON.parse(response.body)
+        return Oj.load(response.body)
       else
         return response
       end
@@ -56,7 +51,7 @@ module CurseForge
 
       response = @client.post(uri, header)
       if autoparse
-        return JSON.parse(response.body)
+        return Oj.load(response.body)
       else
         return response
       end

@@ -7,9 +7,9 @@ module CurseForge
       mimetype = MIME::Types.type_for(ext)
       metadata = {
         :changelog => changelog,
-        :releaseType => release_type
-        :gameVersions => versions
-        :displayname => file
+        :releaseType => release_type,
+        :gameVersions => versions,
+        :displayname => file,
         :change_markup_type => markup
       }
 

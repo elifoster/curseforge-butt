@@ -1,0 +1,17 @@
+GEM
+  remote: https://rubygems.org/
+  specs:
+    httpclient (2.7.1)
+    mime-types (2.99)
+    oj (2.14.6)
+
+PLATFORMS
+  ruby
+
+DEPENDENCIES
+  httpclient
+  mime-types
+  oj
+
+BUNDLED WITH
+   1.11.2
