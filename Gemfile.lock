@@ -2,18 +2,21 @@ GEM
   remote: https://rubygems.org/
   specs:
     httpclient (2.8.0)
-    mime-types (3.0)
+    mime-types (3.1)
       mime-types-data (~> 3.2015)
-    mime-types-data (3.2016.0221)
-    oj (2.15.0)
+    mime-types-data (3.2016.0521)
+    oj (2.18.1)
 
 PLATFORMS
   ruby
 
 DEPENDENCIES
   httpclient (~> 2.8)
-  mime-types (~> 3.0)
-  oj (~> 2.15)
+  mime-types (~> 3.1)
+  oj (~> 2.18)
+
+RUBY VERSION
+   ruby 2.4.0p0
 
 BUNDLED WITH
-   1.11.2
+   1.14.4

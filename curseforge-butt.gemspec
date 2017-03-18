@@ -21,6 +21,6 @@ Gem::Specification.new do |s|
   ]
 
   s.add_runtime_dependency('httpclient', '~> 2.8')
-  s.add_runtime_dependency('oj', '~> 2.15')
-  s.add_runtime_dependency('mime-types', '~> 3.0')
+  s.add_runtime_dependency('oj', '~> 2.18')
+  s.add_runtime_dependency('mime-types', '~> 3.1')
 end
