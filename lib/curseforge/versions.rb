@@ -1,33 +1,30 @@
 module CurseForge
   module Versions
     # Gets the valid versions for the game.
-    # @return [Hash] A hash containing ID => Name pairs.
+    # @return [Array<CurseForge::Versions::Version>] Array of Version objects
     def get_versions
-      url = "https://#{@game}.curseforge.com/api/game/versions"
-      response = get(url, true, 'X-Api-Token' => @api_key)
+      get("https://#{@game}.curseforge.com/api/game/versions").map { |i| Version.new(i) }
+    end
 
-      ret = {}
-      response.each do |i|
-        ret[i['id']] = i['name']
+    # An object representing a game version.
+    class Version
+      # @return [Integer]
+      attr_reader :id
+      # @return [Integer] Not sure what this is, undocumented in the API.
+      attr_reader :type
+      # @return [String]
+      attr_reader :name
+      # @return [String]
+      attr_reader :slug
+
+      # Creates a new Version. Typically, this will only be done by the Versions module itself.
+      # @param opts [Hash] As returned and specified by the API.
+      def initialize(opts = {})
+        @id = opts[:id]
+        @type = opts[:gameVersionTypeID]
+        @name = opts[:name]
+        @slug = opts[:slug]
       end
-
-      ret
-    end
-
-    # Gets the version name by the given ID.
-    # @param id [Int] The ID for the name.
-    # @param hash [Hash] The hash containing all of the versions.
-    def get_name_from_id(id, hash = nil)
-      hash = get_versions if hash.nil?
-      hash.values_at(id)
-    end
-
-    # Gets the version ID by the given name.
-    # @param name [String] The name for the ID.
-    # @param hash [Hash] The hash containing all of the versions.
-    def get_id_from_name(name, hash = nil)
-      hash = get_versions if hash.nil?
-      hash.key(name)
     end
   end
 end

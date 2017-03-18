@@ -9,12 +9,11 @@ module CurseForge
     include CurseForge::Upload
 
     # Creates a new CurseForge::Butt instance.
-    # @param projectid [String/Int] The ID for the project.
+    # @param projectid [String/Integer] The ID for the project.
     # @param game [String] The game to use.
-    # @param api_key [String] The user's API key which will be used to access
-    #   everything.
+    # @param api_key [String] The user's API key which will be used to access everything.
     def initialize(projectid, game, api_key)
-      @projectid = projectid.is_a?(Fixnum) ? projectid.to_s : projectid
+      @projectid = projectid.is_a?(Integer) ? projectid.to_s : projectid
       @game = game
       @api_key = api_key
 
@@ -23,37 +22,43 @@ module CurseForge
 
     # Performs a generic GET request with the provided URL.
     # @param url [String] The URL to get.
-    # @param autoparse [Boolean] Whether to return a parsed JSON or a raw
-    #   HTTPMessage response.
-    # @param header [Hash] The header hash.
-    # @return [HTTPMessage/JSON] A parsed JSON or raw HTTPMessage, depending on
-    #   the value of autoparse.
-    def get(url, autoparse = true, header = nil)
+    # @param header [Hash] The header hash. Automatically assigns the X-Api-Token key to the api key.
+    # @return [Object] The response as a parsed JSON object
+    # @raise [CurseForge::Butt::Error] A CurseForge error object whose message is the code and the message returned by
+    #   the API if it failed.
+    def get(url, header = nil)
       uri = URI.parse(url)
       header = {} if header.nil?
+      header['X-Api-Token'] = @api_key
 
-      response = @client.get(uri, header)
-      if autoparse
-        return Oj.load(response.body)
-      else
-        return response
-      end
+      ret = Oj.load(@client.get(uri, {}, header).body)
+      fail Error.new(ret) if ret.is_a?(Hash) && ret['errorCode']
+      ret
     end
 
-    # Performs a generic POSt request with the provided URL.
+    # Performs a generic POST request with the provided URL.
     # @param url [String] See #get
-    # @param autoparse [Boolean] See #get
     # @param header [Hash] See #get
-    # @return [HTTPMessage/JSON] See #get
-    def post(url, autoparse = true, header = nil)
+    # @return [Object] See #get
+    # @raise [CurseForge::Butt::Error] See #get
+    def post(url, header = nil)
       uri = URI.parse(url)
       header = {} if header.nil?
+      header['X-Api-Token'] = @api_key
 
-      response = @client.post(uri, header)
-      if autoparse
-        return Oj.load(response.body)
-      else
-        return response
+      ret = Oj.load(@client.post(uri, {}, header).body)
+      fail Error.new(ret) if ret.is_a?(Hash) && ret['errorCode']
+      ret
+    end
+
+    class Error < StandardError
+      def initialize(opts = {})
+        @code = opts['errorCode']
+        @msg = opts['errorMessage']
+      end
+
+      def message
+        "#{@code}: #{@msg}"
       end
     end
   end
